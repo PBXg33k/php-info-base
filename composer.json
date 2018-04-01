@@ -1,5 +1,5 @@
 {
-    "name": "pbxg33/php-info-base",
+    "name": "pbxg33k/php-info-base",
     "type": "library",
     "require":  {
         "php": "^5.6|^7.0",
