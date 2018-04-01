@@ -27,7 +27,7 @@ abstract class BaseCommand extends Command
      *
      * @return void
      */
-    abstract function initializeService();
+    abstract protected function initializeService();
 
     protected function configure()
     {
