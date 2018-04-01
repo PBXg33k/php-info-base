@@ -37,7 +37,7 @@ abstract class InfoService
 
     /**
      * InfoService constructor.
-     * 
+     *
      * @param $config
      * @throws ServiceConfigurationException
      * @throws \Exception
@@ -96,7 +96,7 @@ abstract class InfoService
      */
     public function loadService($service, $init = false)
     {
-        $fqcn = implode('\\', ['Pbxg33k', 'MusicInfo', 'Service', $service, 'Service']);
+        $fqcn = implode('\\', [$this->getNamespace() , 'Service', $service, 'Service']);
         if (class_exists($fqcn)) {
             /**
              *
@@ -116,6 +116,14 @@ abstract class InfoService
             throw new \Exception('Service class does not exist: ' . $service . ' (' . $fqcn . ')');
         }
     }
+
+    /**
+     * A temp method which should return the namespace.
+     * Ideally this should be automagically figured out.
+     *
+     * @return string
+     */
+    abstract protected function getNamespace();
 
     /**
      * Merge shared config with service specific configuration
