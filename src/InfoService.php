@@ -5,7 +5,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Pbxg33k\InfoBase\Exception\ServiceConfigurationException;
-use Pbxg33k\InfoBase\Model\IMusicService;
+use Pbxg33k\InfoBase\Model\IService;
 use Pbxg33k\InfoBase\Service\BaseService;
 use Pbxg33k\Traits\PropertyTrait;
 
@@ -36,11 +36,11 @@ abstract class InfoService
     protected $supportedServices = [];
 
     /**
-     * MusicInfo constructor.
-     *
+     * InfoService constructor.
+     * 
      * @param $config
-     *
-     * @throws ServiceConfigurationException if musicinfo.service is missing
+     * @throws ServiceConfigurationException
+     * @throws \Exception
      */
     public function __construct($config)
     {
@@ -90,7 +90,7 @@ abstract class InfoService
      * @param $service
      * @param $init
      *
-     * @return IMusicService
+     * @return IService
      *
      * @throws \Exception
      */
@@ -101,7 +101,7 @@ abstract class InfoService
             /**
              *
              *
-             * @var IMusicService $client
+             * @var IService $client
              */
             $client = new $fqcn();
             $client->setConfig($this->mergeConfig($service));
@@ -157,12 +157,12 @@ abstract class InfoService
     }
 
     /**
-     * @param IMusicService $service
+     * @param IService $service
      * @param               $key
      *
      * @return $this
      */
-    public function addService(IMusicService $service, $key)
+    public function addService(IService $service, $key)
     {
         $this->services[strtolower($key)] = $service;
 
@@ -180,7 +180,8 @@ abstract class InfoService
     /**
      * @param $key
      *
-     * @return BaseService|null
+     * @return null|BaseService
+     * @throws ServiceConfigurationException
      */
     public function getService($key)
     {
