@@ -1,7 +1,7 @@
 <?php
 namespace Pbxg33k\InfoBase\Command;
 
-use Pbxg33k\InfoBase\Service\InfoService;
+use Pbxg33k\InfoBase\InfoService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
