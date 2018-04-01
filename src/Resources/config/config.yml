@@ -1,0 +1,28 @@
+info_service:
+    init_services: true
+    services:
+        - ServiceA
+        - ServiceB
+    preferred_order:
+        - ServiceA
+        - ServiceB
+    # Give a weight per service
+    # This will be used to *guess* the correct
+    # value if multiple services return different values
+    service_weight:
+        - { ServiceA: 10 }
+    guzzle:
+        proxy: null
+    # General config shared across services
+    # Mainly Guzzle
+    defaults:
+        guzzle:
+            http:
+                user_agent: 'your-app-name/0.0.1 +https://www.myawsomesite.com'
+    service_configuration:
+        servicea:
+            throttle: true
+
+#services:
+#    pbx_g33k.music_info:
+#        class: Pbxg33k\MusicInfo\MusicInfo
