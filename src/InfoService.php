@@ -1,5 +1,5 @@
 <?php
-namespace Pbxg33k\InfoBase\Service;
+namespace Pbxg33k\InfoBase;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use GuzzleHttp\Client;
