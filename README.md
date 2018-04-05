@@ -3,7 +3,14 @@
 This is the core of PBX_g33k's various libraries which aggregate/search data from various sources.
 This library is intended as a base and should not be used directly.
 
+## Projects build on this library ##
+* [PHPMusicInfo](https://github.com/PBXg33k/php-music-info)
+* PHPJAVInfo (unreleased as of yet)
+
 ## Requirements ##
+Libraries build upon this library have the following minimal requirements.
+Please note that additional requirements might be met.
+
 In order to use this library your environment MUST meet the following criteria:
 * PHP 5.6 (or later)
 	* curl extension
