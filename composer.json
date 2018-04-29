@@ -26,7 +26,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Pbxg33k\\InfoBase\\": "src/"
+            "Pbxg33k\\InfoBase\\": "src/",
+            "Mock\\": "tests/Mock/"
         }
     },
     "license": "LGPL-3.0",

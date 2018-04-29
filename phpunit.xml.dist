@@ -19,9 +19,6 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory>./src/</directory>
-            <exclude>
-                <file>./src/MusicInfo</file>
-            </exclude>
         </whitelist>
     </filter>
     <logging>

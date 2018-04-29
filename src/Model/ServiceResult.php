@@ -9,7 +9,7 @@
 namespace Pbxg33k\InfoBase\Model;
 
 
-class Result extends BaseModel
+class ServiceResult extends BaseModel
 {
     /**
      * @var boolean
@@ -31,7 +31,7 @@ class Result extends BaseModel
 
     /**
      * @param bool $error
-     * @return Result
+     * @return ServiceResult
      */
     public function setError($error)
     {
@@ -49,7 +49,7 @@ class Result extends BaseModel
 
     /**
      * @param mixed $data
-     * @return Result
+     * @return ServiceResult
      */
     public function setData($data)
     {

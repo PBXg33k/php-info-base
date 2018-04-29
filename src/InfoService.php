@@ -8,7 +8,7 @@ use GuzzleHttp\ClientInterface;
 use Pbxg33k\InfoBase\Exception\ServiceConfigurationException;
 use Pbxg33k\InfoBase\Model\IService;
 use Pbxg33k\InfoBase\Model\RequestError;
-use Pbxg33k\InfoBase\Model\Result;
+use Pbxg33k\InfoBase\Model\ServiceResult;
 use Pbxg33k\InfoBase\Service\BaseService;
 use Pbxg33k\Traits\PropertyTrait;
 
@@ -248,7 +248,7 @@ abstract class InfoService
      * @param $type
      * @param null     $servicesArg
      *
-     * @return ArrayCollection[Result]
+     * @return ArrayCollection[ServiceResult]
      * @throws \Exception
      */
     public function doSearch($argument, $type, $servicesArg = null)
@@ -263,7 +263,7 @@ abstract class InfoService
                 throw new \Exception(sprintf('Method (%s) not found in %s', $methodName, get_class($service)));
             }
 
-            $result = new Result();
+            $result = new ServiceResult();
             try {
                 $results->set($serviceKey, $result->setData($service->{$methodName}()->getByName($argument))->setError(false));
             } catch (RequestException $exception) {
