@@ -2,10 +2,13 @@
 namespace Pbxg33k\InfoBase;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Guzzle\Http\Exception\RequestException;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Pbxg33k\InfoBase\Exception\ServiceConfigurationException;
 use Pbxg33k\InfoBase\Model\IService;
+use Pbxg33k\InfoBase\Model\RequestError;
+use Pbxg33k\InfoBase\Model\Result;
 use Pbxg33k\InfoBase\Service\BaseService;
 use Pbxg33k\Traits\PropertyTrait;
 
@@ -245,7 +248,7 @@ abstract class InfoService
      * @param $type
      * @param null     $servicesArg
      *
-     * @return ArrayCollection
+     * @return ArrayCollection[Result]
      * @throws \Exception
      */
     public function doSearch($argument, $type, $servicesArg = null)
@@ -260,7 +263,31 @@ abstract class InfoService
                 throw new \Exception(sprintf('Method (%s) not found in %s', $methodName, get_class($service)));
             }
 
-            $results->set($serviceKey, $service->{$methodName}()->getByName($argument));
+            $result = new Result();
+            try {
+                $results->set($serviceKey, $result->setData($service->{$methodName}()->getByName($argument))->setError(false));
+            } catch (RequestException $exception) {
+                $results->set($serviceKey, $result
+                    ->setError(true)
+                    ->setData(
+                        (new RequestError())
+                            ->setArguments($argument)
+                            ->setRequest($exception->getRequest())
+                            ->setException($exception)
+                            ->setService($serviceKey)
+                    ));
+            } catch (\GuzzleHttp\Exception\RequestException $exception) {
+                $results->set($serviceKey, $result
+                    ->setError(true)
+                    ->setData(
+                        (new RequestError())
+                            ->setArguments($argument)
+                            ->setRequest($exception->getRequest())
+                            ->setException($exception)
+                            ->setService($serviceKey)
+                            ->setRequest($exception->getRequest())
+                    ));
+            }
         }
 
         return $results;
