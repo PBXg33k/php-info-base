@@ -265,7 +265,7 @@ abstract class InfoService
 
             $result = new ServiceResult();
             try {
-                $results->set($serviceKey, $result->setData($service->{$methodName}()->getByName($argument))->setError(false));
+                $results->set($serviceKey, $result->setData($service->{$methodName}()->search($argument))->setError(false));
             } catch (RequestException $exception) {
                 $results->set($serviceKey, $result
                     ->setError(true)

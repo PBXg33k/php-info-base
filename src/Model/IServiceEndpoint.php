@@ -65,4 +65,12 @@ interface IServiceEndpoint
      * @return mixed
      */
     public function getComplete($arguments);
+
+    /**
+     * The default entrypoint for searching entities.
+     *
+     * @param $arguments
+     * @return mixed
+     */
+    public function search($arguments);
 }
