@@ -103,8 +103,6 @@ abstract class InfoService
         $fqcn = implode('\\', [$this->getNamespace() , 'Service', $service, 'Service']);
         if (class_exists($fqcn)) {
             /**
-             *
-             *
              * @var IService $client
              */
             $client = new $fqcn();

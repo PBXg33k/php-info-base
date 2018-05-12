@@ -96,7 +96,7 @@ class InfoServiceTest extends PHPUnit_Framework_TestCase
 
     public function testDoSearch()
     {
-        $this->addServiceMockbuilder(['typeArg', self::METHOD_IS_INITIALIZED, 'search']);
+        $this->serviceMock = $this->createServiceMockbuilder(['typeArg', self::METHOD_IS_INITIALIZED, 'search']);
 
         $this->serviceMock->expects($this->once())
             ->method('typeArg')
@@ -106,12 +106,46 @@ class InfoServiceTest extends PHPUnit_Framework_TestCase
             ->method('search')
             ->willReturn('testData');
 
-        $this->infoService->addService($this->serviceMock, 'mock');
-
         $result = $this->infoService->doSearch('searchArg', 'typeArg', 'mock');
 
         $this->assertEquals(false, $result->getServiceResult('mock')->isError());
         $this->assertEquals('testData', $result->getServiceResult('mock')->getData());
+    }
+
+    public function testFilteredSearchResultsOnlyReturnedSuccessfulResponses()
+    {
+        $this->setInfoServiceWithoutConfigServices();
+
+        $mockFail = $this->createServiceMockbuilder(['typeArg', 'search'], 'mockFail');
+        $mockGood = $this->createServiceMockbuilder(['typeArg', 'search'], 'mockGood');
+
+        $mockGood->expects($this->once())
+            ->method('typeArg')
+            ->willReturnSelf();
+
+        $mockGood->expects($this->once())
+            ->method('search')
+            ->willReturn('testData');
+
+        // This mock is going to throw a RequestException
+        $mockFail->expects($this->once())
+            ->method('typeArg')
+            ->willReturnSelf();
+
+        $mockFail->expects($this->once())
+            ->method('search')
+            ->willThrowException(new \GuzzleHttp\Exception\RequestException(
+                'meh',
+                new \GuzzleHttp\Psr7\Request('GET', 'https://github.com')
+                ));
+
+        $result = $this->infoService->doSearch('searchArg', 'typeArg');
+
+        $filteredResult = $result->getSuccessfulResults();
+
+        $this->assertEquals(1, $filteredResult->count());
+        $this->assertEquals(false, $filteredResult->getServiceResult('mockgood')->isError());
+        $this->assertEquals('testData', $filteredResult->getServiceResult('mockgood')->getData());
     }
 
     /**
@@ -119,24 +153,41 @@ class InfoServiceTest extends PHPUnit_Framework_TestCase
      */
     public function testServiceConfigurationExceptionIfSearchTypeIsNotFound()
     {
-        $this->addServiceMockbuilder([self::METHOD_IS_INITIALIZED]);
+        $this->serviceMock = $this->createServiceMockbuilder([self::METHOD_IS_INITIALIZED]);
 
         $this->infoService->doSearch('fail', 'foo', 'mock');
     }
 
-    private function addServiceMockbuilder($methods)
+    private function setInfoServiceWithoutConfigServices()
     {
-        $this->serviceMock = $this->getMockBuilder(\Pbxg33k\InfoBase\Model\IService::class)
+        $this->config['info_service']['services'] = [];
+        $this->config['info_service']['preferred_order'] = [];
+        $this->config['info_service']['service_weight'] = [];
+
+        $this->infoService = new TestService($this->config[self::YAML_NAMESPACE]);
+        $this->infoService->setClient($this->clientMock);
+    }
+
+    /**
+     * @param $methods
+     * @param string $name
+     * @return PHPUnit_Framework_MockObject_MockObject
+     */
+    private function createServiceMockbuilder($methods, $name = 'mock')
+    {
+        $mock = $this->getMockBuilder(\Pbxg33k\InfoBase\Model\IService::class)
             ->disableOriginalConstructor()
             ->setMethods($methods)
             ->getMockForAbstractClass();
 
         if(in_array(self::METHOD_IS_INITIALIZED, $methods)) {
-            $this->serviceMock->expects($this->once())
+            $mock->expects($this->once())
                 ->method(self::METHOD_IS_INITIALIZED)
                 ->willreturn(true);
         }
 
-        $this->infoService->addService($this->serviceMock, 'mock');
+        $this->infoService->addService($mock, $name);
+
+        return $mock;
     }
 }
