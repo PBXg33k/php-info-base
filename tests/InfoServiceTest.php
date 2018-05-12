@@ -99,10 +99,6 @@ class InfoServiceTest extends PHPUnit_Framework_TestCase
         $this->serviceMock = $this->createServiceMockbuilder(['typeArg', self::METHOD_IS_INITIALIZED, 'search']);
 
         $this->serviceMock->expects($this->once())
-            ->method('typeArg')
-            ->willReturnSelf();
-
-        $this->serviceMock->expects($this->once())
             ->method('search')
             ->willReturn('testData');
 
@@ -120,17 +116,8 @@ class InfoServiceTest extends PHPUnit_Framework_TestCase
         $mockGood = $this->createServiceMockbuilder(['typeArg', 'search'], 'mockGood');
 
         $mockGood->expects($this->once())
-            ->method('typeArg')
-            ->willReturnSelf();
-
-        $mockGood->expects($this->once())
             ->method('search')
             ->willReturn('testData');
-
-        // This mock is going to throw a RequestException
-        $mockFail->expects($this->once())
-            ->method('typeArg')
-            ->willReturnSelf();
 
         $mockFail->expects($this->once())
             ->method('search')
@@ -140,6 +127,33 @@ class InfoServiceTest extends PHPUnit_Framework_TestCase
                 ));
 
         $result = $this->infoService->doSearch('searchArg', 'typeArg');
+
+        $filteredResult = $result->getSuccessfulResults();
+
+        $this->assertEquals(1, $filteredResult->count());
+        $this->assertEquals(false, $filteredResult->getServiceResult('mockgood')->isError());
+        $this->assertEquals('testData', $filteredResult->getServiceResult('mockgood')->getData());
+    }
+
+    public function testDoSearchWithServiceArgAsArray()
+    {
+        $this->setInfoServiceWithoutConfigServices();
+
+        $mockFail = $this->createServiceMockbuilder(['typeArg', 'search', self::METHOD_IS_INITIALIZED], 'mockfail');
+        $mockGood = $this->createServiceMockbuilder(['typeArg', 'search', self::METHOD_IS_INITIALIZED], 'mockgood');
+
+        $mockGood->expects($this->once())
+            ->method('search')
+            ->willReturn('testData');
+
+        $mockFail->expects($this->once())
+            ->method('search')
+            ->willThrowException(new \GuzzleHttp\Exception\RequestException(
+                'meh',
+                new \GuzzleHttp\Psr7\Request('GET', 'https://github.com')
+            ));
+
+        $result = $this->infoService->doSearch('searchArg', 'typeArg', ['mockfail', 'mockgood']);
 
         $filteredResult = $result->getSuccessfulResults();
 
@@ -179,6 +193,12 @@ class InfoServiceTest extends PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->setMethods($methods)
             ->getMockForAbstractClass();
+
+        if(in_array('typeArg', $methods)) {
+            $mock->expects($this->once())
+                ->method('typeArg')
+                ->willReturnSelf();
+        }
 
         if(in_array(self::METHOD_IS_INITIALIZED, $methods)) {
             $mock->expects($this->once())
