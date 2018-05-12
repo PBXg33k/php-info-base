@@ -28,7 +28,7 @@ class SearchResultTest extends PHPUnit_Framework_TestCase
     public function testGetResult()
     {
         $this->assertEquals(2, $this->model->count());
-        $this->assertEquals(true, $this->model->getServiceResult('fail')->isError());
+        $this->assertEquals(true, $this->model->getResult('fail')->isError());
         $this->assertEquals(false, $this->model->getServiceResult('success')->isError());
     }
 
