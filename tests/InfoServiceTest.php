@@ -109,21 +109,14 @@ class InfoServiceTest extends PHPUnit_Framework_TestCase
 
         $this->serviceMock->expects($this->once())
             ->method('search')
-            ->willReturn(
-                (new \Pbxg33k\InfoBase\Model\SearchResult())
-                    ->setResult('mock',
-                        (new \Pbxg33k\InfoBase\Model\ServiceResult())
-                            ->setError(false)
-                            ->setData('testData')
-                    )
-            );
+            ->willReturn('testData');
 
         $this->infoService->addService($this->serviceMock, 'mock');
 
         $result = $this->infoService->doSearch('searchArg', 'typeArg', 'mock');
 
-        $this->assertEquals(false, $result->first()->isError());
-//        $this->assertEquals('testData', $result->first()->getData()->);
+        $this->assertEquals(false, $result->getServiceResult('mock')->isError());
+        $this->assertEquals('testData', $result->getServiceResult('mock')->getData());
     }
 
     private function addMockService()

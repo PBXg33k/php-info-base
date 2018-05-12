@@ -8,6 +8,7 @@ use GuzzleHttp\ClientInterface;
 use Pbxg33k\InfoBase\Exception\ServiceConfigurationException;
 use Pbxg33k\InfoBase\Model\IService;
 use Pbxg33k\InfoBase\Model\RequestError;
+use Pbxg33k\InfoBase\Model\SearchResult;
 use Pbxg33k\InfoBase\Model\ServiceResult;
 use Pbxg33k\Traits\PropertyTrait;
 
@@ -247,13 +248,14 @@ abstract class InfoService
      * @param $type
      * @param null     $servicesArg
      *
-     * @return ArrayCollection[ServiceResult]
+     * @return SearchResult
      * @throws \Exception
      */
     public function doSearch($argument, $type, $servicesArg = null)
     {
         $services = $this->_prepareSearch($servicesArg);
-        $results = new ArrayCollection();
+//        $results = new ArrayCollection();
+        $results = new SearchResult();
 
         foreach ($services as $serviceKey => $service) {
             $methodName = $this->getMethodName($type);
@@ -264,9 +266,9 @@ abstract class InfoService
 
             $result = new ServiceResult();
             try {
-                $results->set($serviceKey, $result->setData($service->{$methodName}()->search($argument))->setError(false));
+                $results->setResult($serviceKey, $result->setData($service->{$methodName}()->search($argument))->setError(false));
             } catch (RequestException $exception) {
-                $results->set($serviceKey, $result
+                $results->setResult($serviceKey, $result
                     ->setError(true)
                     ->setData(
                         (new RequestError())
@@ -276,7 +278,7 @@ abstract class InfoService
                             ->setService($serviceKey)
                     ));
             } catch (\GuzzleHttp\Exception\RequestException $exception) {
-                $results->set($serviceKey, $result
+                $results->setResult($serviceKey, $result
                     ->setError(true)
                     ->setData(
                         (new RequestError())
