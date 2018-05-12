@@ -22,8 +22,6 @@ class Service extends BaseService implements IService
 
     public function search($argument)
     {
-        // @codeCoverageIgnoreStart
         return $this->client->get('test', ['args']);
-        // @codeCoverageIgnoreEnd
     }
 }

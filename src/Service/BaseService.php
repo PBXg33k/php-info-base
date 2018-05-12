@@ -113,6 +113,8 @@ abstract class BaseService implements IService
      */
     public function init($config = [])
     {
+        // @codeCoverageIgnoreStart
         throw new ServiceConfigurationException(self::ERR_METHOD_NOT_IMPLEMENTED);
+        // @codeCoverageIgnoreEnd
     }
 }
