@@ -6,6 +6,7 @@ use Guzzle\Http\Exception\RequestException;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Pbxg33k\InfoBase\Exception\ServiceConfigurationException;
+use Pbxg33k\InfoBase\Exception\ServiceException;
 use Pbxg33k\InfoBase\Model\IService;
 use Pbxg33k\InfoBase\Model\RequestError;
 use Pbxg33k\InfoBase\Model\SearchResult;
@@ -254,14 +255,13 @@ abstract class InfoService
     public function doSearch($argument, $type, $servicesArg = null)
     {
         $services = $this->_prepareSearch($servicesArg);
-//        $results = new ArrayCollection();
         $results = new SearchResult();
 
         foreach ($services as $serviceKey => $service) {
             $methodName = $this->getMethodName($type);
 
             if (!method_exists($service, $methodName)) {
-                throw new \Exception(sprintf('Method (%s) not found in %s', $methodName, get_class($service)));
+                throw new ServiceConfigurationException(sprintf('Method (%s) not found in %s', $methodName, get_class($service)));
             }
 
             $result = new ServiceResult();
@@ -313,12 +313,11 @@ abstract class InfoService
                 if (is_string($service) && $loadedService = $this->getService($service)) {
                     $services->set($service, $loadedService);
                 } else {
-                    throw new \Exception(sprintf('Service (%s) cannot be found', $service));
+                    throw new ServiceException(sprintf('Service (%s) cannot be found', $service));
                 }
             }
         } elseif (is_string($servicesArg) && $loadedService = $this->getService($servicesArg)) {
             $services->set($servicesArg, $loadedService);
-
         }
 
         return $services;

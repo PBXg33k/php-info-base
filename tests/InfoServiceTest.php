@@ -6,6 +6,8 @@ class InfoServiceTest extends PHPUnit_Framework_TestCase
 {
     const YAML_NAMESPACE = 'info_service';
 
+    const METHOD_IS_INITIALIZED = 'isInitialized';
+
     /**
      * @var TestService
      */
@@ -94,14 +96,7 @@ class InfoServiceTest extends PHPUnit_Framework_TestCase
 
     public function testDoSearch()
     {
-        $this->serviceMock = $this->getMockBuilder(\Pbxg33k\InfoBase\Model\IService::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['typeArg', 'isInitialized', 'search'])
-            ->getMockForAbstractClass();
-
-        $this->serviceMock->expects($this->once())
-            ->method('isInitialized')
-            ->willreturn(true);
+        $this->addServiceMockbuilder(['typeArg', self::METHOD_IS_INITIALIZED, 'search']);
 
         $this->serviceMock->expects($this->once())
             ->method('typeArg')
@@ -119,9 +114,29 @@ class InfoServiceTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('testData', $result->getServiceResult('mock')->getData());
     }
 
-    private function addMockService()
+    /**
+     * @expectedException \Pbxg33k\InfoBase\Exception\ServiceConfigurationException
+     */
+    public function testServiceConfigurationExceptionIfSearchTypeIsNotFound()
     {
-        $this->serviceMock = $this->createMock(\Pbxg33k\InfoBase\Model\IService::class);
+        $this->addServiceMockbuilder([self::METHOD_IS_INITIALIZED]);
+
+        $this->infoService->doSearch('fail', 'foo', 'mock');
+    }
+
+    private function addServiceMockbuilder($methods)
+    {
+        $this->serviceMock = $this->getMockBuilder(\Pbxg33k\InfoBase\Model\IService::class)
+            ->disableOriginalConstructor()
+            ->setMethods($methods)
+            ->getMockForAbstractClass();
+
+        if(in_array(self::METHOD_IS_INITIALIZED, $methods)) {
+            $this->serviceMock->expects($this->once())
+                ->method(self::METHOD_IS_INITIALIZED)
+                ->willreturn(true);
+        }
+
         $this->infoService->addService($this->serviceMock, 'mock');
     }
 }
