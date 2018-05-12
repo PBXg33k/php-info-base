@@ -3,8 +3,9 @@ namespace Pbxg33k\InfoBase\Service;
 
 use GuzzleHttp\ClientInterface;
 use Pbxg33k\InfoBase\Exception\ServiceConfigurationException;
+use Pbxg33k\InfoBase\Model\IService;
 
-abstract class BaseService
+abstract class BaseService implements IService
 {
     const ERR_METHOD_NOT_IMPLEMENTED = "Method not implemented";
     /**
@@ -21,7 +22,7 @@ abstract class BaseService
     /**
      * @return ClientInterface
      */
-    public function getClient()
+    public function getClient(): ClientInterface
     {
         return $this->client;
     }
@@ -91,7 +92,7 @@ abstract class BaseService
      *
      * @return BaseService
      */
-    public function setInitialized($initialized)
+    public function setInitialized(bool $initialized)
     {
         $this->initialized = $initialized;
 

@@ -15,7 +15,7 @@ interface IService
     /**
      * @return ClientInterface
      */
-    public function getClient();
+    public function getClient(): ClientInterface;
 
     /**
      * @param $config
@@ -44,6 +44,8 @@ interface IService
      * @return mixed
      */
     public function getApiClient();
+
+    public function setInitialized(bool $initialized);
 
     /**
      * Service specific initializer

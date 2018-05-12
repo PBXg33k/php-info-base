@@ -9,7 +9,6 @@ use Pbxg33k\InfoBase\Exception\ServiceConfigurationException;
 use Pbxg33k\InfoBase\Model\IService;
 use Pbxg33k\InfoBase\Model\RequestError;
 use Pbxg33k\InfoBase\Model\ServiceResult;
-use Pbxg33k\InfoBase\Service\BaseService;
 use Pbxg33k\Traits\PropertyTrait;
 
 abstract class InfoService
@@ -41,11 +40,11 @@ abstract class InfoService
     /**
      * InfoService constructor.
      *
-     * @param $config
+     * @param array $config
      * @throws ServiceConfigurationException
      * @throws \Exception
      */
-    public function __construct($config)
+    public function __construct(array $config)
     {
         $this->config = $config;
 
@@ -191,7 +190,7 @@ abstract class InfoService
     /**
      * @param $key
      *
-     * @return null|BaseService
+     * @return null|IService
      * @throws ServiceConfigurationException
      */
     public function getService($key)
@@ -205,12 +204,12 @@ abstract class InfoService
     }
 
     /**
-     * @param BaseService $service
+     * @param IService $service
      *
-     * @return BaseService
+     * @return IService
      * @throws ServiceConfigurationException
      */
-    public function initializeService(BaseService $service)
+    public function initializeService(IService $service)
     {
         if (!$service->isInitialized()) {
             $service->init();
@@ -234,7 +233,7 @@ abstract class InfoService
     }
 
     /**
-     * @return BaseService|null
+     * @return IService|null
      */
     public function getPreferredService()
     {
