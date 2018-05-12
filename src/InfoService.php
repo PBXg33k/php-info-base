@@ -2,7 +2,6 @@
 namespace Pbxg33k\InfoBase;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Guzzle\Http\Exception\RequestException;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Pbxg33k\InfoBase\Exception\ServiceConfigurationException;
@@ -233,7 +232,8 @@ abstract class InfoService
     }
 
     /**
-     * @return IService|null
+     * @return null|IService
+     * @throws ServiceConfigurationException
      */
     public function getPreferredService()
     {
@@ -265,16 +265,6 @@ abstract class InfoService
             $result = new ServiceResult();
             try {
                 $results->setResult($serviceKey, $result->setData($service->{$methodName}()->search($argument))->setError(false));
-            } catch (RequestException $exception) {
-                $results->setResult($serviceKey, $result
-                    ->setError(true)
-                    ->setData(
-                        (new RequestError())
-                            ->setArguments($argument)
-                            ->setRequest($exception->getRequest())
-                            ->setException($exception)
-                            ->setService($serviceKey)
-                    ));
             } catch (\GuzzleHttp\Exception\RequestException $exception) {
                 $results->setResult($serviceKey, $result
                     ->setError(true)

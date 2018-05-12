@@ -1,7 +1,6 @@
 <?php
 namespace Mock\Service\ServiceA;
 
-use GuzzleHttp\ClientInterface;
 use Pbxg33k\InfoBase\Model\IService;
 use Pbxg33k\InfoBase\Service\BaseService;
 
