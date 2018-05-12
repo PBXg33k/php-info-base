@@ -31,6 +31,7 @@ abstract class BaseCommand extends Command
 
     protected function configure()
     {
+        // @codeCoverageIgnoreStart
         if (!$this->infoService) {
             $this->initializeService();
         }
@@ -41,15 +42,18 @@ abstract class BaseCommand extends Command
             ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enables debug mode');
 
         parent::configure();
+        // @codeCoverageIgnoreEnd
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
+        // @codeCoverageIgnoreStart
         if ($input->getOption('debug')) {
             Debug::enable();
         }
 
         parent::initialize($input, $output);
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -60,6 +64,7 @@ abstract class BaseCommand extends Command
      */
     protected function generateTableForSearchResult($collection, $columns, Table $table)
     {
+        // @codeCoverageIgnoreStart
         $table->setHeaders(array_values($columns));
 
         foreach ($collection as $service => $serviceResult) {
@@ -67,6 +72,7 @@ abstract class BaseCommand extends Command
         }
 
         return $table;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -77,6 +83,7 @@ abstract class BaseCommand extends Command
      */
     protected function generateTableRows($collection, $columns, Table $table)
     {
+        // @codeCoverageIgnoreStart
         foreach ($collection as $item) {
             $row = [];
 
@@ -88,5 +95,6 @@ abstract class BaseCommand extends Command
         }
 
         return $table;
+        // @codeCoverageIgnoreEnd
     }
 }

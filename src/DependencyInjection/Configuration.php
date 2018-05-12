@@ -7,6 +7,7 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 class Configuration implements ConfigurationInterface
 {
+
     /**
      * Generates the configuration tree builder.
      *
@@ -14,14 +15,16 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
+        // @codeCoverageIgnoreStart
         throw new InvalidConfigurationException("You must override getConfigTreeBuilder and call buildConfigTreeBuilder");
+        // @codeCoverageIgnoreEnd
     }
 
     protected function buildConfigTreeBuilder(TreeBuilder $treeBuilder, $rootName)
     {
+        // @codeCoverageIgnoreStart
         $rootNode = $treeBuilder->root($rootName);
 
-        // @codingStandardsIgnoreStart
         $rootNode
             ->children()
                 ->booleanNode('init_services')->defaultTrue()->end()
@@ -44,7 +47,7 @@ class Configuration implements ConfigurationInterface
             ->end()
         ;
 
-        // @codingStandardsIgnoreEnd
         return $treeBuilder;
+        // @codeCoverageIgnoreEnd
     }
 }
