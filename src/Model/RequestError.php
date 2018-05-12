@@ -1,7 +1,7 @@
 <?php
 namespace Pbxg33k\InfoBase\Model;
 
-use Guzzle\Http\Message\RequestInterface;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class RequestError
@@ -14,7 +14,7 @@ class RequestError
     /**
      * @var string
      */
-    private $argument;
+    private $arguments;
 
     /**
      * @var \Exception
@@ -22,7 +22,7 @@ class RequestError
     private $exception;
 
     /**
-     * @var RequestInterface|\Psr\Http\Message\RequestInterface
+     * @var RequestInterface
      */
     private $request;
 
@@ -52,9 +52,9 @@ class RequestError
     /**
      * @return string
      */
-    public function getArgument()
+    public function getArguments()
     {
-        return $this->argument;
+        return $this->arguments;
     }
 
     /**
@@ -79,14 +79,14 @@ class RequestError
      * @param \Exception $exception
      * @return RequestError
      */
-    public function setException($exception)
+    public function setException(\Exception $exception)
     {
         $this->exception = $exception;
         return $this;
     }
 
     /**
-     * @return RequestInterface|\Psr\Http\Message\RequestInterface
+     * @return RequestInterface
      */
     public function getRequest()
     {
@@ -94,10 +94,10 @@ class RequestError
     }
 
     /**
-     * @param RequestInterface|\Psr\Http\Message\RequestInterface $request
+     * @param RequestInterface $request
      * @return RequestError
      */
-    public function setRequest($request)
+    public function setRequest(RequestInterface $request)
     {
         $this->request = $request;
         return $this;
@@ -115,7 +115,7 @@ class RequestError
      * @param ResponseInterface $response
      * @return RequestError
      */
-    public function setResponse($response)
+    public function setResponse(ResponseInterface $response)
     {
         $this->response = $response;
         return $this;
