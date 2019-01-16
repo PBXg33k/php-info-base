@@ -15,7 +15,7 @@
         "guzzlehttp/psr7": "^1.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7",
+        "phpunit/phpunit": "^5.7 || ^7.0",
         "satooshi/php-coveralls": "^2.0",
         "symfony/debug": "^3.2|^4.0"
     },
